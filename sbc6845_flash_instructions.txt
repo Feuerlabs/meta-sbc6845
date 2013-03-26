@@ -1,0 +1,18 @@
+
+setenv ipaddr 192.168.0.2      # Device IP
+setenv netmask 255.255.255.0   
+setenv serverip 192.168.13.45  # TFTP server ip
+saveenv
+
+
+# Wipe the entire nand area
+nand erase 
+
+# Load and flash the ubi volume image with the rootfs ubifs
+tftp 0x70000000 core-image-minimal-sbc6845.ubi
+nand write.i 0x70000000 0xba00000 $(filesize)
+
+# Load the boot uImage
+tftp 0x72000000 uImage
+nand write.i 0x72000000 0x0 $(filesize)
+
